@@ -1,0 +1,538 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+
+<h2>{{ stock.company_name }}</h2>
+
+<hr>
+
+<div class="row">
+
+<div class="col-md-4">
+
+<div class="card shadow">
+
+<div class="card-body">
+
+<h3>₹{{ live.price }}</h3>
+
+<p>Open : {{ live.open }}</p>
+
+<p>High : {{ live.high }}</p>
+
+<p>Low : {{ live.low }}</p>
+
+<p>Volume : {{ live.volume }}</p>
+
+{% if live.change > 0 %}
+
+<h5 class="text-success">
+
++{{ live.change_percent }}%
+
+</h5>
+
+{% else %}
+
+<h5 class="text-danger">
+
+{{ live.change_percent }}%
+
+</h5>
+
+{% endif %}
+
+
+<form method="POST"
+action="{% url 'add_watchlist' stock.id %}">
+
+{% csrf_token %}
+
+<button class="btn btn-warning">
+
+<i class="bi bi-star"></i>
+
+Add Watchlist
+
+</button>
+
+</form>
+
+
+ <a href="{% url 'create_gtt' stock.id %}"
+   class="btn btn-warning">
+    Create GTT Order
+</a>
+
+
+
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-8">
+
+<div class="card shadow">
+
+<div class="card-body">
+
+<h4>
+
+<div class="card shadow mb-4">
+
+<div class="card-body">
+
+</h4>
+
+   
+
+<h4>
+AI Strategy Analysis
+</h4>
+
+
+{% if signal %}
+
+
+<div class="row">
+
+
+<div class="col-md-3">
+
+<h6>Signal</h6>
+
+{% if signal.signal == "BUY" %}
+
+<span class="badge bg-success fs-5">
+BUY
+</span>
+
+{% else %}
+
+<span class="badge bg-warning fs-5">
+{{signal.signal}}
+</span>
+
+{% endif %}
+
+
+
+{% if signal %}
+
+Signal: {{signal.signal}}
+
+Score: {{signal.score}}
+
+Target: {{signal.target_price}}
+
+Stop Loss: {{signal.stop_loss}}
+
+Risk Reward: {{signal.risk_reward}}
+
+{% endif %}
+
+
+</div>
+
+
+<div class="col-md-3">
+
+<h6>Entry Price</h6>
+
+₹{{signal.entry_price}}
+
+</div>
+
+
+
+<div class="col-md-3">
+
+<h6>Target</h6>
+
+₹{{signal.target_price}}
+
+</div>
+
+
+
+<div class="col-md-3">
+
+<h6>Stop Loss</h6>
+
+₹{{signal.stop_loss}}
+
+</div>
+
+
+</div>
+
+
+<hr>
+
+
+<div class="row">
+
+
+<div class="col-md-3">
+
+Score
+
+<h4>
+{{signal.score}}/100
+</h4>
+
+</div>
+
+
+<div class="col-md-3">
+
+
+<form method="post" action="{% url 'buy_stock' stock.id %}">
+    {% csrf_token %}
+
+    <input
+        type="number"
+        name="quantity"
+        class="form-control"
+        min="1"
+        required
+    >
+
+    <button class="btn btn-success mt-2">
+        Buy
+    </button>
+
+</form>
+
+
+Risk Reward
+
+<h4>
+{{signal.risk_reward}}:1
+</h4>
+
+</div>
+
+
+<div class="col-md-3">
+
+Confidence
+
+<h4>
+
+
+{{signal.confidence}}%
+</h4>
+
+</div>
+
+
+<div class="col-md-3">
+
+Trend
+
+<h4>
+{{signal.trend}}
+</h4>
+
+</div>
+
+</div>
+
+<hr>
+
+<h6>
+Reason
+</h6>
+
+<p>
+
+{{signal.reason}}
+
+</p>
+
+{% else %}
+
+<p>
+Not enough data for analysis
+</p>
+
+{% endif %}
+
+</div>
+
+</div>
+
+
+
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4>{{ stock.symbol }}</h4>
+
+    <button
+    type="button"
+    class="btn btn-primary"
+    data-bs-toggle="modal"
+    data-bs-target="#indicatorModal">
+    + Indicator
+</button>
+
+
+
+
+
+<div class="mb-3">
+
+    {% for item in indicators %}
+
+        <span class="badge bg-info text-dark me-2">
+            {{ item.indicator }} {{ item.period }}
+
+            <a href="{% url 'edit_chart_indicator' stock.id item.id %}"
+               class="text-dark ms-2">
+                ✏️
+            </a>
+
+            <a href="{% url 'delete_chart_indicator' stock.id item.id %}"
+               class="text-danger ms-2">
+                🗑
+            </a>
+
+        </span>
+
+    {% empty %}
+
+        <span class="text-muted">
+            No indicators selected
+        </span>
+
+    {% endfor %}
+
+
+    
+</div>
+
+
+</div>
+
+{{ plot_div|safe }}
+
+
+{{ chart|safe }}
+
+
+
+<div class="modal fade" id="indicatorModal" tabindex="-1">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5>Add Indicator</h5>
+            </div>
+
+            <div class="modal-body">
+
+               <form method="post"
+               action="{% url 'add_chart_indicator' stock.id %}">
+               {% csrf_token %}
+
+               {{ form.as_p }}
+               <button class="btn btn-success">
+                Apply
+            </button>
+        </form>
+    </div>
+</div>
+</div>
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% comment %} {% extends "base.html" %}
+{% block content %}
+<div class="container my-4">
+
+    <!-- Market Indices -->
+    <div class="row mb-4">
+        <div class="col">
+            <div class="card shadow-sm border-0">
+                <div class="card-body d-flex justify-content-around text-center">
+                    <div><strong>NIFTY 50:</strong> 24599.8 <span class="text-success">(+0.96%)</span></div>
+                    <div><strong>BANK NIFTY:</strong> 57754.25 <span class="text-success">(+0.94%)</span></div>
+                    <div><strong>SENSEX:</strong> 78699.44 <span class="text-success">(+0.77%)</span></div>
+                    <div><strong>INDIA VIX:</strong> 11.93 <span class="text-danger">(-1.06%)</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Company Header -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold">{{ stock.company_name }}</h2>
+        <h4 class="text-muted">{{ stock.symbol }}</h4>
+    </div>
+    <hr>
+
+    <div class="row g-4">
+        <!-- Stock Info -->
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center">
+                    <h3 class="fw-bold text-primary">₹{{ live.price }}</h3>
+                    <p>Open: {{ live.open }}</p>
+                    <p>High: {{ live.high }}</p>
+                    <p>Low: {{ live.low }}</p>
+                    <p>Volume: {{ live.volume }}</p>
+
+                    {% if live.change > 0 %}
+                        <h5 class="text-success fw-bold">+{{ live.change_percent }}%</h5>
+                    {% else %}
+                        <h5 class="text-danger fw-bold">{{ live.change_percent }}%</h5>
+                    {% endif %}
+
+                    <form method="POST" action="{% url 'add_watchlist' stock.id %}" class="mt-3">
+                        {% csrf_token %}
+                        <button class="btn btn-outline-warning w-100">
+                            <i class="bi bi-star-fill me-1"></i> Add to Watchlist
+                        </button>
+                    </form>
+
+                    <a href="{% url 'create_gtt' stock.id %}" class="btn btn-warning w-100 mt-2">
+                        <i class="bi bi-gear-fill me-1"></i> Create GTT Order
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Strategy Analysis -->
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h4 class="fw-bold mb-3">AI Strategy Analysis</h4>
+
+                    {% if signal %}
+                        <div class="row text-center mb-3">
+                            <div class="col-md-3">
+                                <h6>Signal</h6>
+                                {% if signal.signal == "BUY" %}
+                                    <span class="badge bg-success fs-6">BUY</span>
+                                {% else %}
+                                    <span class="badge bg-warning text-dark fs-6">{{ signal.signal }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-3"><h6>Entry Price</h6>₹{{ signal.entry_price }}</div>
+                            <div class="col-md-3"><h6>Target</h6>₹{{ signal.target_price }}</div>
+                            <div class="col-md-3"><h6>Stop Loss</h6>₹{{ signal.stop_loss }}</div>
+                        </div>
+
+                        <hr>
+
+                        <div class="row text-center mb-3">
+                            <div class="col-md-3"><h6>Score</h6><h4>{{ signal.score }}/100</h4></div>
+                            <div class="col-md-3">
+                                <form method="post" action="{% url 'buy_stock' stock.id %}">
+                                    {% csrf_token %}
+                                    <input type="number" name="quantity" class="form-control mb-2" min="1" required>
+                                    <button class="btn btn-success w-100">Buy</button>
+                                </form>
+                                <h6>Risk Reward</h6><h5>{{ signal.risk_reward }}:1</h5>
+                            </div>
+                            <div class="col-md-3"><h6>Confidence</h6><h4>{{ signal.confidence }}%</h4></div>
+                            <div class="col-md-3"><h6>Trend</h6><h4>{{ signal.trend }}</h4></div>
+                        </div>
+
+                        <hr>
+                        <h6>Reason</h6>
+                        <p>{{ signal.reason }}</p>
+                    {% else %}
+                        <p class="text-muted">Not enough data for analysis</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Indicators -->
+    <div class="card shadow-sm border-0 mt-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h4 class="fw-bold">Indicators</h4>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#indicatorModal">
+                    + Add Indicator
+                </button>
+            </div>
+
+            <div class="mb-3">
+                {% for item in indicators %}
+                    <span class="badge bg-info text-dark me-2">
+                        {{ item.indicator }} {{ item.period }}
+                        <a href="{% url 'edit_chart_indicator' stock.id item.id %}" class="text-dark ms-2">✏️</a>
+                        <a href="{% url 'delete_chart_indicator' stock.id item.id %}" class="text-danger ms-2">🗑</a>
+                    </span>
+                {% empty %}
+                    <span class="text-muted">No indicators selected</span>
+                {% endfor %}
+            </div>
+
+            {{ plot_div|safe }}
+            {{ chart|safe }}
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="indicatorModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Add Indicator</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{% url 'add_chart_indicator' stock.id %}">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button class="btn btn-success w-100">Apply</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %} {% endcomment %}

@@ -1,0 +1,283 @@
+{% extends "base.html" %}
+
+{% block title %}Trading Signals{% endblock %}
+
+{% block content %}
+
+<style>
+
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.page-title{
+    font-size:2rem;
+    font-weight:700;
+    color:#fff;
+}
+
+.page-subtitle{
+    color:#94a3b8;
+    margin-top:5px;
+}
+
+.signal-card{
+    background:#1b222d;
+    border:1px solid #313b49;
+    border-radius:16px;
+    overflow:hidden;
+}
+
+.signal-header{
+    background:#171d27;
+    border-bottom:1px solid #313b49;
+    padding:18px 24px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.table{
+    margin:0;
+    color:#fff!important;
+}
+
+.table thead th{
+    background:#111827!important;
+    color:#94a3b8!important;
+    border-color:#313b49!important;
+    text-transform:uppercase;
+    font-size:12px;
+    letter-spacing:.08em;
+    padding:16px;
+}
+
+.table td{
+    background:transparent!important;
+    color:#fff!important;
+    border-color:#313b49!important;
+    padding:18px 16px;
+    vertical-align:middle;
+}
+
+.table tbody tr{
+    transition:.2s;
+}
+
+.table tbody tr:hover td{
+    background:#232b36!important;
+}
+
+.stock-symbol{
+    font-weight:700;
+    color:#60a5fa;
+    font-size:15px;
+}
+
+.badge{
+    padding:8px 12px;
+    font-weight:600;
+}
+
+.price{
+    font-weight:600;
+}
+
+.reward{
+    color:#22c55e;
+    font-weight:700;
+}
+
+.empty-state{
+    padding:80px 20px;
+    text-align:center;
+}
+
+.empty-state h4{
+    color:#fff;
+}
+
+.empty-state p{
+    color:#94a3b8;
+}
+
+</style>
+
+<div class="container-fluid">
+
+<div class="page-header">
+
+<div>
+
+<h2 class="page-title">
+
+Trading Signals
+
+</h2>
+
+<div class="page-subtitle">
+
+Latest generated trading opportunities
+
+</div>
+
+</div>
+
+<span class="badge bg-primary">
+
+{{ signals|length }} Signals
+
+</span>
+
+</div>
+
+<div class="signal-card">
+
+<div class="signal-header">
+
+<h5 class="mb-0">
+
+Market Signals
+
+</h5>
+
+</div>
+
+{% if signals %}
+
+<div class="table-responsive">
+
+<table class="table align-middle">
+
+<thead>
+
+<tr>
+
+<th>Stock</th>
+
+<th>Signal</th>
+
+<th>Entry</th>
+
+<th>Target</th>
+
+<th>Stop Loss</th>
+
+<th>Risk / Reward</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for signal in signals %}
+
+<tr>
+
+<td>
+
+<div class="stock-symbol">
+
+{{ signal.stock.symbol }}
+
+</div>
+
+</td>
+
+<td>
+
+{% if signal.signal == "BUY" %}
+
+<span class="badge bg-success">
+
+BUY
+
+</span>
+
+{% elif signal.signal == "SELL" %}
+
+<span class="badge bg-danger">
+
+SELL
+
+</span>
+
+{% else %}
+
+<span class="badge bg-secondary">
+
+HOLD
+
+</span>
+
+{% endif %}
+
+</td>
+
+<td class="price">
+
+₹{{ signal.entry_price }}
+
+</td>
+
+<td class="price text-success">
+
+₹{{ signal.target_price }}
+
+</td>
+
+<td class="price text-danger">
+
+₹{{ signal.stop_loss }}
+
+</td>
+
+<td>
+
+<span class="reward">
+
+{{ signal.risk_reward }} : 1
+
+</span>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% else %}
+
+<div class="empty-state">
+
+<h4>
+
+No Trading Signals
+
+</h4>
+
+<p>
+
+No signals are available at the moment. Check back later after market analysis.
+
+</p>
+
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+{% endblock %}

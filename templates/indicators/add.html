@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block title %}Add Indicator{% endblock %}
+
+{% block content %}
+
+<style>
+
+.indicator-card{
+    max-width:700px;
+    margin:40px auto;
+    background:#1b222d;
+    border:1px solid #313b49;
+    border-radius:16px;
+    overflow:hidden;
+}
+
+.indicator-header{
+    padding:22px 30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid #313b49;
+    background:#171d27;
+}
+
+.indicator-title{
+    font-size:1.5rem;
+    font-weight:700;
+    color:#fff;
+}
+
+.indicator-subtitle{
+    color:#94a3b8;
+    font-size:14px;
+}
+
+.form-area{
+    padding:30px;
+}
+
+.form-label{
+    color:#d1d5db;
+    font-weight:600;
+    margin-bottom:8px;
+}
+
+.form-control,
+.form-select,
+select,
+input[type=text],
+input[type=number]{
+
+    width:100%;
+    background:#111827!important;
+    border:1px solid #374151!important;
+    color:#fff!important;
+    border-radius:10px;
+    padding:12px 15px;
+}
+
+.form-control:focus,
+.form-select:focus,
+select:focus,
+input:focus{
+
+    background:#111827!important;
+    color:#fff!important;
+    border-color:#4f8cff!important;
+    box-shadow:none!important;
+
+}
+
+.form-check{
+    padding:14px 18px;
+    background:#111827;
+    border:1px solid #374151;
+    border-radius:10px;
+}
+
+.form-check-input{
+    transform:scale(1.2);
+    margin-right:10px;
+}
+
+.action-buttons{
+    margin-top:35px;
+}
+
+.btn-save{
+
+    background:#22c55e;
+    border:none;
+    color:#fff;
+    border-radius:10px;
+    padding:12px 24px;
+    font-weight:600;
+
+}
+
+.btn-save:hover{
+
+    background:#16a34a;
+    color:#fff;
+
+}
+
+.btn-cancel{
+
+    margin-left:10px;
+    border-radius:10px;
+    padding:12px 24px;
+
+}
+
+</style>
+
+<div class="container">
+
+<div class="indicator-card">
+
+<div class="indicator-header">
+
+<div>
+
+<div class="indicator-title">
+
+Technical Indicator
+
+</div>
+
+<div class="indicator-subtitle">
+
+Configure your trading indicator
+
+</div>
+
+</div>
+
+<span class="badge bg-primary">
+
+Setup
+
+</span>
+
+</div>
+
+<div class="form-area">
+
+<form method="post">
+
+{% csrf_token %}
+
+<div class="mb-4">
+
+<label class="form-label">
+
+Indicator
+
+</label>
+
+{{ form.indicator }}
+
+</div>
+
+<div class="mb-4">
+
+<label class="form-label">
+
+Period
+
+</label>
+
+{{ form.period }}
+
+</div>
+
+<div class="mb-4">
+
+<label class="form-label">
+
+Enabled
+
+</label>
+
+<div class="form-check">
+
+{{ form.enabled }}
+
+</div>
+
+</div>
+
+<div class="action-buttons">
+
+<button type="submit" class="btn btn-save">
+
+<i class="bi bi-check-circle-fill"></i>
+
+Save Indicator
+
+</button>
+
+<a href="{% url 'indicator_list' %}"
+
+class="btn btn-outline-light btn-cancel">
+
+Cancel
+
+</a>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

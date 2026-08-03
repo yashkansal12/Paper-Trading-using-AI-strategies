@@ -1,0 +1,361 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">
+        Backtest Strategy
+    </h2>
+
+    <div class="card">
+
+        <div class="card-header">
+            Configure & Run
+        </div>
+
+        <div class="card-body">
+
+            <form method="post">
+
+                {% csrf_token %}
+
+                <div class="row">
+
+                    <div class="col-md-3 mb-3">
+
+                        <label class="form-label">
+                            Strategy
+                        </label>
+
+                        <select class="form-select" name="strategy">
+
+                            <option value="default">
+                                Default Strategy
+                            </option>
+
+                            <option value="ema">
+                                EMA Crossover
+                            </option>
+
+                            <option value="rsi">
+                                RSI Strategy
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+
+                        <label class="form-label">
+                            Initial Capital
+                        </label>
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            name="initial_capital"
+                            value="100000">
+
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+
+                        <label class="form-label">
+                            Start Date
+                        </label>
+
+                        <input
+                            type="date"
+                            class="form-control"
+                            name="start_date">
+
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+
+                        <label class="form-label">
+                            End Date
+                        </label>
+
+                        <input
+                            type="date"
+                            class="form-control"
+                            name="end_date">
+
+                    </div>
+
+                </div>
+
+                <hr>
+
+                <h5>Stock Universe</h5>
+
+                <div class="mb-3">
+
+                    <div class="form-check">
+
+                        <input
+                            class="form-check-input"
+                            type="radio"
+                            name="universe"
+                            value="db"
+                            checked>
+
+                        <label class="form-check-label">
+                            DB Tickers ({{ total_stocks }} stocks)
+                        </label>
+
+                    </div>
+
+                    <div class="form-check">
+
+                        <input
+                            class="form-check-input"
+                            type="radio"
+                            name="universe"
+                            value="custom">
+
+                        <label class="form-check-label">
+                            Custom Symbols
+                        </label>
+
+                    </div>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Symbols (comma separated)
+                    </label>
+
+                    <textarea
+                        class="form-control"
+                        rows="3"
+                        name="symbols"
+                        placeholder="RELIANCE,TCS,INFY"></textarea>
+
+                </div>
+
+
+                {% if result %}
+
+<div class="card mt-4">
+    <div class="card-header">
+        Backtest Summary
+    </div>
+
+
+
+    {% if result.results %}
+
+<div class="card mt-4">
+
+    <div class="card-header">
+        Stock-wise Results
+    </div>
+
+    <div class="card-body">
+
+        <table class="table table-hover">
+
+            <thead>
+
+                <tr>
+                    <th>Symbol</th>
+                    <th>Final Capital</th>
+                    <th>Return %</th>
+                    <th>Trades</th>
+                    <th>Win Rate</th>
+                    <th>Net Profit</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for stock in result.results %}
+
+                <tr>
+
+                    <td>{{ stock.symbol }}</td>
+                    <td>₹{{ stock.final_capital }}</td>
+                    <td>{{ stock.return_percent }}%</td>
+                    <td>{{ stock.total_trades }}</td>
+                    <td>{{ stock.win_rate }}%</td>
+                    <td>₹{{ stock.net_profit }}</td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+    <div class="card-body">
+
+        <p><strong>Strategy:</strong> {{ result.strategy }}</p>
+
+        <p><strong>Total Stocks:</strong> {{ result.total_stocks }}</p>
+        <p><strong>Selected Stock{% if result.selected_symbols|length > 1 %}s{% endif %}:</strong>
+            
+            {{ result.selected_symbols|join:", " }}
+        </p>
+
+        
+        <ul>
+            {% for symbol in result.selected_symbols %}
+                <li>{{ symbol }}</li>
+            {% endfor %}
+        </ul>
+
+
+        <p><strong>Capital:</strong> {{ result.capital }}</p>
+        <p><strong>Start:</strong> {{ result.start_date }}</p>
+        <p><strong>End:</strong> {{ result.end_date }}</p>
+
+
+        <div class="row mt-4">
+
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h6>Final Capital</h6>
+                <h4>₹{{ result.summary.final_capital }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h6>Net Profit</h6>
+                <h4>₹{{ result.summary.net_profit }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h6>Return</h6>
+                <h4>{{ result.summary.return_percent }}%</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h6>Win Rate</h6>
+                <h4>{{ result.summary.win_rate }}%</h4>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="row mt-3">
+
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h6>Total Trades</h6>
+                <h4>{{ result.summary.total_trades }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h6>Winning Trades</h6>
+                <h4>{{ result.summary.winning_trades }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h6>Losing Trades</h6>
+                <h4>{{ result.summary.losing_trades }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card">
+            <div class="card-body">
+                <h6>Processed Stocks</h6>
+                <h4>{{ result.processed_stocks }}</h4>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<table class="table table-striped mt-4">
+    <tbody>
+        <tr>
+            <th>Max Drawdown</th>
+            <td>{{ result.summary.max_drawdown }}%</td>
+        </tr>
+
+        <tr>
+            <th>Profit Factor</th>
+            <td>{{ result.summary.profit_factor }}</td>
+        </tr>
+
+        <tr>
+            <th>Average Profit</th>
+            <td>₹{{ result.summary.average_profit }}</td>
+        </tr>
+
+        <tr>
+            <th>Average Loss</th>
+            <td>₹{{ result.summary.average_loss }}</td>
+        </tr>
+
+        <tr>
+            <th>Total Candles</th>
+            <td>{{ result.total_candles }}</td>
+        </tr>
+    </tbody>
+</table>
+
+
+
+
+    </div>
+</div>
+
+{% endif %}
+
+
+                <button
+                    class="btn btn-primary"
+                    type="submit">
+
+                    Run Backtest
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

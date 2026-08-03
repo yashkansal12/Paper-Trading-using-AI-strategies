@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Indicator{% endblock %}
+
+{% block content %}
+
+<style>
+
+.edit-card{
+    max-width:720px;
+    margin:40px auto;
+    background:#1b222d;
+    border:1px solid #313b49;
+    border-radius:16px;
+    overflow:hidden;
+}
+
+.edit-header{
+    background:#171d27;
+    border-bottom:1px solid #313b49;
+    padding:22px 30px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.edit-title{
+    font-size:1.6rem;
+    font-weight:700;
+    color:#fff;
+}
+
+.edit-subtitle{
+    color:#94a3b8;
+    font-size:14px;
+}
+
+.edit-body{
+    padding:30px;
+}
+
+.edit-body p{
+    margin-bottom:22px;
+}
+
+.edit-body label{
+    display:block;
+    margin-bottom:8px;
+    color:#d1d5db;
+    font-weight:600;
+}
+
+.edit-body input,
+.edit-body select,
+.edit-body textarea,
+.edit-body .form-control,
+.edit-body .form-select{
+
+    width:100%;
+    background:#111827!important;
+    border:1px solid #374151!important;
+    color:#fff!important;
+    border-radius:10px;
+    padding:12px 15px;
+
+}
+
+.edit-body input:focus,
+.edit-body select:focus,
+.edit-body textarea:focus,
+.edit-body .form-control:focus,
+.edit-body .form-select:focus{
+
+    background:#111827!important;
+    color:#fff!important;
+    border-color:#3b82f6!important;
+    box-shadow:none!important;
+
+}
+
+.helptext{
+    color:#94a3b8;
+    font-size:13px;
+}
+
+.errorlist{
+    list-style:none;
+    padding:0;
+    margin:8px 0;
+    color:#ef4444;
+}
+
+.button-group{
+    margin-top:30px;
+}
+
+.btn-save{
+
+    background:#22c55e;
+    border:none;
+    color:#fff;
+    padding:12px 26px;
+    border-radius:10px;
+    font-weight:600;
+
+}
+
+.btn-save:hover{
+
+    background:#16a34a;
+    color:#fff;
+
+}
+
+.btn-cancel{
+
+    margin-left:12px;
+    padding:12px 26px;
+    border-radius:10px;
+
+}
+
+</style>
+
+<div class="container">
+
+<div class="edit-card">
+
+<div class="edit-header">
+
+<div>
+
+<div class="edit-title">
+
+Edit Indicator
+
+</div>
+
+<div class="edit-subtitle">
+
+Update your technical indicator settings
+
+</div>
+
+</div>
+
+<span class="badge bg-primary">
+
+Edit
+
+</span>
+
+</div>
+
+<div class="edit-body">
+
+<form method="post">
+
+{% csrf_token %}
+
+{{ form.as_p }}
+
+<div class="button-group">
+
+<button type="submit"
+
+class="btn btn-save">
+
+<i class="bi bi-check-circle-fill"></i>
+
+Save Changes
+
+</button>
+
+<a href="{% url 'stock_detail' pk=request.resolver_match.kwargs.stock_id %}"
+
+class="btn btn-outline-light btn-cancel">
+
+Cancel
+
+</a>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

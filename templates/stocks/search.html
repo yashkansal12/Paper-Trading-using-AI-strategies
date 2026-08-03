@@ -1,0 +1,217 @@
+{% extends "base.html" %}
+
+{% block title %}Stock Search{% endblock %}
+
+{% block content %}
+
+<style>
+
+.search-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.page-title{
+    font-size:2rem;
+    font-weight:700;
+    color:#fff;
+}
+
+.page-subtitle{
+    color:#94a3b8;
+    margin-top:5px;
+}
+
+.search-card{
+    background:#1b222d;
+    border:1px solid #313b49;
+    border-radius:16px;
+    padding:25px;
+    margin-bottom:30px;
+}
+
+.search-box{
+    position:relative;
+}
+
+.search-box input{
+    background:#111827!important;
+    border:1px solid #374151!important;
+    color:#fff!important;
+    border-radius:12px;
+    padding:14px 18px;
+    font-size:16px;
+}
+
+.search-box input:focus{
+    background:#111827!important;
+    color:#fff!important;
+    border-color:#3b82f6!important;
+    box-shadow:none!important;
+}
+
+.stock-card{
+    background:#1b222d;
+    border:1px solid #313b49;
+    border-radius:14px;
+    transition:.25s;
+    margin-bottom:18px;
+}
+
+.stock-card:hover{
+    transform:translateY(-3px);
+    border-color:#3b82f6;
+    box-shadow:0 12px 25px rgba(0,0,0,.35);
+}
+
+.stock-card .card-body{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:22px;
+}
+
+.stock-symbol{
+    font-size:1.4rem;
+    font-weight:700;
+    color:#60a5fa;
+}
+
+.company-name{
+    color:#94a3b8;
+    margin-top:5px;
+}
+
+.btn-open{
+    border-radius:10px;
+    padding:10px 22px;
+    font-weight:600;
+}
+
+.empty-state{
+    text-align:center;
+    padding:80px 20px;
+}
+
+.empty-state h4{
+    color:#fff;
+}
+
+.empty-state p{
+    color:#94a3b8;
+}
+
+</style>
+
+<div class="container-fluid">
+
+<div class="search-header">
+
+<div>
+
+<h2 class="page-title">
+
+Stock Search
+
+</h2>
+
+<div class="page-subtitle">
+
+Search NSE stocks and add them to your trading dashboard
+
+</div>
+
+</div>
+
+</div>
+
+<div class="search-card">
+
+<form method="GET">
+
+<div class="search-box">
+
+<input
+type="text"
+name="q"
+class="form-control"
+placeholder="Search NSE Stocks..."
+value="{{ query }}">
+
+</div>
+
+</form>
+
+</div>
+
+{% for stock in stocks %}
+
+<div class="stock-card">
+
+<div class="card-body">
+
+<div>
+
+<div class="stock-symbol">
+
+{{ stock.symbol }}
+
+</div>
+
+<div class="company-name">
+
+{{ stock.company_name }}
+
+</div>
+
+</div>
+
+<div>
+
+<a href="{% url 'stock_create_from_search' stock.symbol %}"
+
+class="btn btn-primary btn-open">
+
+Open
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+{% empty %}
+
+{% if query %}
+
+<div class="stock-card">
+
+<div class="empty-state">
+
+<h4>
+
+No Stock Found
+
+</h4>
+
+<p>
+
+No NSE stock matched "<strong>{{ query }}</strong>".
+
+</p>
+
+</div>
+
+</div>
+
+{% endif %}
+
+{% endfor %}
+
+</div>
+
+{% endblock %}

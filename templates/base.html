@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>
+{% block title %}PaperTrading{% endblock %}
+</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+{% load static %}
+
+<link rel="stylesheet"
+href="{% static 'css/style.css' %}">
+
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
+
+<style>
+
+:root{
+
+--bg:#0b1120;
+--card:#182233;
+--sidebar:#111827;
+--sidebar-hover:#2563eb;
+--border:#243244;
+
+--primary:#3b82f6;
+--success:#16c784;
+--danger:#ea3943;
+--warning:#f59e0b;
+
+--text:#f8fafc;
+--muted:#94a3b8;
+
+}
+
+*{
+
+margin:0;
+padding:0;
+box-sizing:border-box;
+
+}
+
+body{
+
+background:var(--bg);
+color:var(--text);
+
+font-family:'Poppins',sans-serif;
+
+overflow-x:hidden;
+
+}
+
+/* Scrollbar */
+
+::-webkit-scrollbar{
+
+width:10px;
+
+}
+
+::-webkit-scrollbar-track{
+
+background:#0f172a;
+
+}
+
+::-webkit-scrollbar-thumb{
+
+background:#334155;
+border-radius:10px;
+
+}
+
+::-webkit-scrollbar-thumb:hover{
+
+background:#475569;
+
+}
+
+
+/* Navbar */
+
+.navbar{
+
+height:70px;
+
+background:#111827!important;
+
+border-bottom:1px solid rgba(255,255,255,.08);
+
+backdrop-filter:blur(18px);
+
+box-shadow:0 6px 20px rgba(0,0,0,.35);
+
+z-index:999;
+
+}
+
+.navbar-brand{
+
+font-size:24px;
+
+font-weight:700;
+
+color:white!important;
+
+letter-spacing:.5px;
+
+}
+
+
+/* Navbar layout - single line */
+
+.navbar .container-fluid{
+
+display:flex;
+
+align-items:center;
+
+flex-wrap:nowrap;
+
+gap:16px;
+
+}
+
+.navbar-brand{
+
+flex-shrink:0;
+
+}
+
+/* Search */
+
+.search-box{
+
+width:220px;
+
+flex-shrink:0;
+
+}
+
+.search-box input{
+
+background:#1e293b;
+
+border:1px solid #334155;
+
+color:white;
+
+border-radius:12px;
+
+padding:10px 15px;
+
+}
+
+.search-box input::placeholder{
+
+color:#94a3b8;
+
+}
+
+.search-box input:focus{
+
+background:#1e293b;
+
+border-color:#3b82f6;
+
+color:white;
+
+box-shadow:none;
+
+}
+
+.search-box button{
+
+border-radius:12px;
+
+padding:8px 16px;
+
+}
+
+
+/* ================= TOP NAV (replaces sidebar) ================= */
+
+.top-nav{
+
+display:flex;
+
+align-items:center;
+
+flex-wrap:nowrap;
+
+gap:2px;
+
+overflow-x:auto;
+
+scrollbar-width:none;
+
+min-width:0;
+
+}
+
+.top-nav::-webkit-scrollbar{
+
+display:none;
+
+}
+
+.top-nav .nav-link{
+
+color:#94a3b8;
+
+margin:0 1px;
+
+padding:9px 11px;
+
+border-radius:8px;
+
+font-size:14px;
+
+font-weight:500;
+
+transition:.25s;
+
+display:flex;
+
+align-items:center;
+
+white-space:nowrap;
+
+flex-shrink:0;
+
+}
+
+.top-nav .nav-link i{
+
+font-size:14px;
+
+margin-right:6px;
+
+}
+
+.top-nav .nav-link:hover{
+
+background:rgba(255,255,255,.06);
+
+color:white;
+
+}
+
+.top-nav .nav-link.active{
+
+background:var(--primary);
+
+color:white;
+
+}
+
+
+/* Page */
+
+.content{
+
+padding:30px;
+
+min-height:calc(100vh - 70px);
+
+}
+
+
+/* Cards */
+
+.card{
+
+background:var(--card);
+
+border:none;
+
+border-radius:18px;
+
+color:white;
+
+box-shadow:0 15px 35px rgba(0,0,0,.35);
+
+transition:.3s;
+
+}
+
+.card:hover{
+
+transform:translateY(-6px);
+
+box-shadow:0 20px 40px rgba(0,0,0,.45);
+
+}
+
+
+/* Buttons */
+
+.btn{
+
+border-radius:12px;
+
+font-weight:500;
+
+}
+
+.btn-success{
+
+background:var(--success);
+
+border:none;
+
+}
+
+.btn-danger{
+
+background:var(--danger);
+
+border:none;
+
+}
+
+.btn-warning{
+
+background:var(--warning);
+
+border:none;
+
+}
+
+.btn-primary{
+
+background:var(--primary);
+
+border:none;
+
+}
+
+
+/* Forms */
+
+.form-control{
+
+background:#111827;
+
+border:1px solid #334155;
+
+color:white;
+
+}
+
+.form-control:focus{
+
+background:#111827;
+
+color:white;
+
+border-color:#3b82f6;
+
+box-shadow:none;
+
+}
+
+
+/* Tables */
+
+.table{
+
+color:white;
+
+}
+
+.table thead{
+
+background:#111827;
+
+}
+
+.table td,
+.table th{
+
+border-color:#334155;
+
+vertical-align:middle;
+
+}
+
+
+/* Alerts */
+
+.alert{
+
+border:none;
+
+border-radius:12px;
+
+}
+
+</style>
+
+</head>
+<body>
+
+<!-- ================= NAVBAR ================= -->
+
+<nav class="navbar navbar-expand-lg navbar-dark px-4">
+
+<div class="container-fluid">
+
+<a class="navbar-brand me-4"
+href="{% url 'dashboard' %}">
+
+📈 PaperTrading
+
+</a>
+
+<!-- ================= TOP NAV (was sidebar) ================= -->
+
+<ul class="nav top-nav flex-grow-1">
+
+<li>
+
+<a class="nav-link"
+
+href="{% url 'dashboard' %}">
+
+<i class="bi bi-speedometer2"></i>
+
+Dashboard
+
+</a>
+
+</li>
+
+<li>
+
+<a class="nav-link"
+
+href="{% url 'stock_list' %}">
+
+<i class="bi bi-graph-up-arrow"></i>
+
+Stocks
+
+</a>
+
+</li>
+
+<li>
+
+<a class="nav-link"
+
+href="{% url 'signals' %}">
+
+<i class="bi bi-lightning-charge-fill"></i>
+
+Signals
+
+</a>
+
+</li>
+
+<li>
+
+<a class="nav-link"
+
+href="{% url 'watchlist' %}">
+
+<i class="bi bi-star-fill"></i>
+
+Watchlist
+
+</a>
+
+</li>
+
+<li>
+
+<a class="nav-link"
+
+href="{% url 'portfolio' %}">
+
+<i class="bi bi-wallet2"></i>
+
+Portfolio
+
+</a>
+
+</li>
+
+<li>
+    <a class="nav-link" href="{% url 'indicator_list' %}">
+        <i class="bi bi-graph-up"></i>
+        Indicators
+    </a>
+</li>
+
+<li>
+    <a class="nav-link" href="{% url 'trade_history' %}">
+        <i class="bi bi-arrow-left-right"></i>
+        Paper Trading
+    </a>
+</li>
+
+<li>
+
+<a class="nav-link" href="{% url 'gtt_list' %}">
+    <i class="bi bi-bell-fill"></i>
+    GTT Orders
+</a>
+
+</li>
+
+<li>
+
+<a class="nav-link" href="{% url 'backtest_dashboard' %}">
+    <i class="bi bi-clock-history"></i>
+    Backtesting
+</a>
+
+</li>
+
+</ul>
+
+<!-- Search -->
+
+<form class="d-flex search-box me-3"
+action="{% url 'search_stock' %}">
+
+<input
+class="form-control"
+type="search"
+name="q"
+placeholder="Search NSE Stocks...">
+
+<button class="btn btn-warning ms-2">
+
+<i class="bi bi-search"></i>
+
+</button>
+
+</form>
+
+<!-- Right Side -->
+
+<div class="d-flex align-items-center flex-shrink-0">
+
+{% if user.is_authenticated %}
+
+<a href="{% url 'profile' %}"
+class="btn btn-outline-light rounded-pill px-4 me-2">
+
+<i class="bi bi-person-circle"></i>
+
+{{ user.username }}
+
+</a>
+
+<form method="post" action="{% url 'logout' %}" class="d-inline">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger rounded-pill">
+        <i class="bi bi-box-arrow-right"></i>
+    </button>
+</form>
+
+
+</a>
+
+{% else %}
+
+<a href="{% url 'login' %}"
+class="btn btn-success rounded-pill px-4">
+
+Login
+
+</a>
+
+{% endif %}
+
+</div>
+
+</div>
+
+</nav>
+
+
+<!-- ================= PAGE ================= -->
+
+<div class="content">
+
+
+<!-- ================= MARKET STRIP ================= -->
+
+<div class="card mb-4">
+
+<div class="card-body py-3">
+
+<div class="row text-center">
+
+<div class="col">
+
+<h6 class="text-secondary">
+
+NIFTY 50
+
+</h6>
+
+<h5 class="text-success">
+
+{{ market.nifty.price }}
+
+<span class="small">
+
+{{ market.nifty.percent }}%
+
+</span>
+
+</h5>
+
+</div>
+
+<div class="col">
+
+<h6 class="text-secondary">
+
+BANK NIFTY
+
+</h6>
+
+<h5 class="text-success">
+
+{{ market.banknifty.price }}
+
+<span class="small">
+
+{{ market.banknifty.percent }}%
+
+</span>
+
+</h5>
+
+</div>
+
+<div class="col">
+
+<h6 class="text-secondary">
+
+SENSEX
+
+</h6>
+
+<h5 class="text-success">
+
+{{ market.sensex.price }}
+
+
+<span class="small">
+
+{{ market.sensex.percent }}%
+
+</span>
+
+</h5>
+
+</div>
+
+<div class="col">
+
+<h6 class="text-secondary">
+
+INDIA VIX
+
+</h6>
+
+<h5 class="text-danger">
+
+{{ market.indiavix.price }}
+
+
+<span class="small">
+
+{{ market.indiavix.percent }}%
+
+</span>
+
+</h5>
+
+</div>
+
+<div class="col">
+
+<h6 class="text-secondary">
+
+Market
+
+</h6>
+
+<h5 class="text-success">
+
+🟢 OPEN
+
+</h5>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Django Messages -->
+
+{% if messages %}
+
+{% for message in messages %}
+
+<div class="alert alert-info alert-dismissible fade show">
+
+{{ message }}
+
+<button
+type="button"
+class="btn-close"
+data-bs-dismiss="alert"></button>
+
+</div>
+
+{% endfor %}
+
+{% endif %}
+
+
+<!-- ================= PAGE CONTENT ================= -->
+
+{% block content %}
+
+{% endblock %}
+
+<!-- ================= FOOTER ================= -->
+
+<footer class="mt-5">
+
+<div class="card">
+
+<div class="card-body py-4">
+
+<div class="row align-items-center">
+
+<div class="col-md-6">
+
+<h5 class="mb-1">
+
+📈 Paper Trading
+
+</h5>
+
+<p class="text-secondary mb-0">
+
+Professional Paper Trading Platform built with Django
+
+</p>
+
+</div>
+
+<div class="col-md-6 text-md-end">
+
+<span class="text-secondary">
+
+Version 1.0
+
+</span>
+
+<br>
+
+<small class="text-secondary">
+
+© {% now "Y" %} Paper Trading
+
+</small>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</footer>
+
+
+<!-- ================= FLOATING ACTION BUTTON ================= -->
+
+<a href="{% url 'stock_list' %}"
+
+class="fab">
+
+<i class="bi bi-plus-lg"></i>
+
+</a>
+
+
+</div>
+
+
+<style>
+
+/* Floating Button */
+
+.fab{
+
+position:fixed;
+
+bottom:30px;
+
+right:30px;
+
+width:65px;
+
+height:65px;
+
+border-radius:50%;
+
+background:linear-gradient(135deg,#2563eb,#06b6d4);
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+color:white;
+
+font-size:26px;
+
+text-decoration:none;
+
+box-shadow:0 15px 35px rgba(37,99,235,.4);
+
+transition:.3s;
+
+z-index:999;
+
+}
+
+.fab:hover{
+
+transform:translateY(-6px) scale(1.05);
+
+color:white;
+
+}
+
+
+/* Fade Animation */
+
+.content{
+
+animation:fadeIn .45s ease;
+
+}
+
+@keyframes fadeIn{
+
+from{
+
+opacity:0;
+
+transform:translateY(15px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+}
+
+
+/* Table Hover */
+
+.table tbody tr{
+
+transition:.25s;
+
+}
+
+.table tbody tr:hover{
+
+background:#1e293b;
+
+}
+
+
+/* Cards */
+
+.card{
+
+overflow:hidden;
+
+position:relative;
+
+}
+
+.card::after{
+
+content:"";
+
+position:absolute;
+
+left:0;
+
+top:0;
+
+height:3px;
+
+width:100%;
+
+background:linear-gradient(90deg,#2563eb,#06b6d4);
+
+}
+
+
+/* Mobile */
+
+@media(max-width:991px){
+
+.search-box{
+
+width:100%;
+
+margin:15px 0;
+
+}
+
+.top-nav{
+
+justify-content:flex-start;
+
+}
+
+.content{
+
+padding:18px;
+
+}
+
+.fab{
+
+width:58px;
+
+height:58px;
+
+font-size:22px;
+
+bottom:20px;
+
+right:20px;
+
+}
+
+}
+
+</style>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+// Highlight Current Menu
+
+document.addEventListener("DOMContentLoaded",function(){
+
+let current=window.location.pathname;
+
+document.querySelectorAll(".nav-link").forEach(function(link){
+
+if(link.getAttribute("href")==current){
+
+link.classList.add("active");
+
+}
+
+});
+
+});
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+
+{% block title %}Paper Trading History{% endblock %}
+
+{% block content %}
+
+<style>
+
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.page-title{
+    font-size:2rem;
+    font-weight:700;
+    color:#fff;
+}
+
+.page-subtitle{
+    color:#94a3b8;
+    margin-top:5px;
+}
+
+.history-card{
+    background:#1b222d;
+    border:1px solid #313b49;
+    border-radius:16px;
+    overflow:hidden;
+}
+
+.history-header{
+    background:#171d27;
+    border-bottom:1px solid #313b49;
+    padding:18px 24px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.table{
+    margin:0;
+    color:#fff!important;
+}
+
+.table thead th{
+    background:#111827!important;
+    color:#94a3b8!important;
+    border-color:#313b49!important;
+    text-transform:uppercase;
+    font-size:12px;
+    letter-spacing:.08em;
+    padding:16px;
+}
+
+.table td{
+    background:transparent!important;
+    color:#fff!important;
+    border-color:#313b49!important;
+    padding:18px 16px;
+    vertical-align:middle;
+}
+
+.table tbody tr{
+    transition:.2s;
+}
+
+.table tbody tr:hover td{
+    background:#232b36!important;
+}
+
+.stock-symbol{
+    font-weight:700;
+    color:#60a5fa;
+}
+
+.buy-badge{
+    background:#16a34a;
+    color:#fff;
+    padding:7px 12px;
+    border-radius:8px;
+    font-weight:600;
+}
+
+.sell-badge{
+    background:#dc2626;
+    color:#fff;
+    padding:7px 12px;
+    border-radius:8px;
+    font-weight:600;
+}
+
+.price{
+    font-weight:600;
+}
+
+.empty-state{
+    padding:80px 20px;
+    text-align:center;
+}
+
+.empty-state h4{
+    color:#fff;
+}
+
+.empty-state p{
+    color:#94a3b8;
+}
+
+</style>
+
+<div class="container-fluid">
+
+<div class="page-header">
+
+<div>
+
+<h2 class="page-title">
+
+Paper Trading History
+
+</h2>
+
+<div class="page-subtitle">
+
+Review all executed paper trades
+
+</div>
+
+</div>
+
+<span class="badge bg-primary">
+
+{{ trades|length }} Trades
+
+</span>
+
+</div>
+
+<div class="history-card">
+
+<div class="history-header">
+
+<h5 class="mb-0">
+
+Trade History
+
+</h5>
+
+</div>
+
+{% if trades %}
+
+<div class="table-responsive">
+
+<table class="table align-middle">
+
+<thead>
+
+<tr>
+
+<th>Stock</th>
+
+<th>Type</th>
+
+<th>Quantity</th>
+
+<th>Price</th>
+
+<th>Total</th>
+
+<th>Date</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for trade in trades %}
+
+<tr>
+
+<td>
+
+<div class="stock-symbol">
+
+{{ trade.stock.symbol }}
+
+</div>
+
+</td>
+
+<td>
+
+{% if trade.trade_type == "BUY" %}
+
+<span class="buy-badge">
+
+BUY
+
+</span>
+
+{% else %}
+
+<span class="sell-badge">
+
+SELL
+
+</span>
+
+{% endif %}
+
+</td>
+
+<td>
+
+{{ trade.quantity }}
+
+</td>
+
+<td class="price">
+
+₹{{ trade.price }}
+
+</td>
+
+<td class="price">
+
+₹{{ trade.total_amount }}
+
+</td>
+
+<td>
+
+{{ trade.created_at }}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% else %}
+
+<div class="empty-state">
+
+<h4>
+
+No Trades Found
+
+</h4>
+
+<p>
+
+You haven't executed any paper trades yet.
+
+</p>
+
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+{% endblock %}

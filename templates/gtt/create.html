@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block title %}
+Create GTT Order
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+.gtt-card{
+    max-width:750px;
+    margin:40px auto;
+    background:#1b222d;
+    border:1px solid #313b49;
+    border-radius:16px;
+    overflow:hidden;
+}
+
+.gtt-header{
+    padding:22px 30px;
+    border-bottom:1px solid #313b49;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.gtt-title{
+    font-size:1.5rem;
+    font-weight:700;
+    color:#fff;
+}
+
+.stock-info{
+    padding:25px 30px 10px;
+}
+
+.stock-symbol{
+    font-size:2rem;
+    font-weight:700;
+    color:#5aa7ff;
+}
+
+.company-name{
+    color:#94a3b8;
+    margin-top:5px;
+}
+
+.form-section{
+    padding:25px 30px 30px;
+}
+
+.form-section p{
+    margin-bottom:20px;
+}
+
+.form-section label{
+    color:#d1d5db;
+    font-weight:600;
+    margin-bottom:8px;
+    display:block;
+}
+
+.form-control,
+.form-select,
+input,
+select{
+    width:100%;
+    background:#111827 !important;
+    border:1px solid #374151 !important;
+    color:#fff !important;
+    border-radius:10px;
+    padding:12px 15px;
+}
+
+.form-control:focus,
+.form-select:focus,
+input:focus,
+select:focus{
+    border-color:#4f8cff !important;
+    box-shadow:none !important;
+    background:#111827 !important;
+    color:#fff !important;
+}
+
+.btn-save{
+    background:#22c55e;
+    border:none;
+    color:white;
+    padding:12px 24px;
+    border-radius:10px;
+    font-weight:600;
+}
+
+.btn-save:hover{
+    background:#16a34a;
+}
+
+.btn-cancel{
+    padding:12px 24px;
+    border-radius:10px;
+    margin-left:10px;
+}
+
+.helptext{
+    color:#94a3b8;
+    font-size:13px;
+}
+
+.errorlist{
+    color:#ef4444;
+    list-style:none;
+    padding:0;
+    margin:8px 0;
+}
+
+</style>
+
+<div class="container">
+
+<div class="gtt-card">
+
+<div class="gtt-header">
+
+<div class="gtt-title">
+
+Create GTT Order
+
+</div>
+
+<span class="badge bg-warning text-dark">
+
+Good Till Triggered
+
+</span>
+
+</div>
+
+<div class="stock-info">
+
+<div class="stock-symbol">
+
+{{ stock.symbol }}
+
+</div>
+
+<div class="company-name">
+
+{{ stock.company_name }}
+
+</div>
+
+</div>
+
+<div class="form-section">
+
+<form method="post">
+
+{% csrf_token %}
+
+{{ form.as_p }}
+
+<div class="mt-4">
+
+<button class="btn btn-save">
+
+<i class="bi bi-check-circle"></i>
+
+Save GTT Order
+
+</button>
+
+<a href="{% url 'stock_detail' stock.id %}"
+
+class="btn btn-outline-light btn-cancel">
+
+Cancel
+
+</a>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block content %}
+
+<style>
+.hero-section{
+    min-height:75vh;
+    display:flex;
+    align-items:center;
+}
+
+.hero-title{
+    font-size:3.2rem;
+    font-weight:700;
+    color:#ffffff;
+    line-height:1.2;
+}
+
+.hero-title span{
+    color:#4f8cff;
+}
+
+.hero-text{
+    font-size:1.1rem;
+    color:#94a3b8;
+    max-width:650px;
+    margin:20px auto 35px;
+}
+
+.feature-card{
+    background:#1b222d;
+    border:1px solid #303744;
+    border-radius:14px;
+    padding:25px;
+    transition:.25s;
+    height:100%;
+}
+
+.feature-card:hover{
+    transform:translateY(-6px);
+    border-color:#4f8cff;
+    box-shadow:0 15px 35px rgba(0,0,0,.35);
+}
+
+.feature-icon{
+    width:60px;
+    height:60px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#0f172a;
+    color:#4f8cff;
+    font-size:28px;
+    margin:0 auto 20px;
+}
+
+.feature-title{
+    color:#fff;
+    font-weight:600;
+    margin-bottom:10px;
+}
+
+.feature-text{
+    color:#94a3b8;
+    font-size:.95rem;
+}
+
+.hero-btn{
+    min-width:180px;
+    border-radius:10px;
+    padding:12px 24px;
+    font-weight:600;
+}
+</style>
+
+<div class="container hero-section">
+
+<div class="text-center w-100">
+
+<h1 class="hero-title">
+Professional
+<span>Paper Trading</span><br>
+Platform
+</h1>
+
+<p class="hero-text">
+Analyze stocks, generate AI-powered trading signals, paper trade,
+create GTT orders, manage watchlists, and backtest your strategies
+from one modern dashboard.
+</p>
+
+{% if user.is_authenticated %}
+
+<a href="{% url 'dashboard' %}"
+class="btn btn-primary hero-btn me-2">
+
+<i class="bi bi-speedometer2"></i>
+Dashboard
+
+</a>
+
+<a href="{% url 'stock_list' %}"
+class="btn btn-outline-light hero-btn">
+
+<i class="bi bi-graph-up"></i>
+Browse Stocks
+
+</a>
+
+{% else %}
+
+<a href="{% url 'login' %}"
+class="btn btn-success hero-btn me-2">
+
+<i class="bi bi-box-arrow-in-right"></i>
+Login
+
+</a>
+
+<a href="{% url 'register' %}"
+class="btn btn-outline-primary hero-btn">
+
+<i class="bi bi-person-plus"></i>
+Register
+
+</a>
+
+{% endif %}
+
+<div class="row g-4 mt-5">
+
+<div class="col-lg-3 col-md-6">
+
+<div class="feature-card">
+
+<div class="feature-icon">
+<i class="bi bi-graph-up-arrow"></i>
+</div>
+
+<h5 class="feature-title">
+Stock Analysis
+</h5>
+
+<p class="feature-text">
+Analyze NSE stocks with technical indicators and trading signals.
+</p>
+
+</div>
+
+</div>
+
+<div class="col-lg-3 col-md-6">
+
+<div class="feature-card">
+
+<div class="feature-icon">
+<i class="bi bi-wallet2"></i>
+</div>
+
+<h5 class="feature-title">
+Paper Trading
+</h5>
+
+<p class="feature-text">
+Practice trading without risking real money.
+</p>
+
+</div>
+
+</div>
+
+<div class="col-lg-3 col-md-6">
+
+<div class="feature-card">
+
+<div class="feature-icon">
+<i class="bi bi-bell"></i>
+</div>
+
+<h5 class="feature-title">
+GTT Orders
+</h5>
+
+<p class="feature-text">
+Create Good Till Triggered orders and automate your strategy.
+</p>
+
+</div>
+
+</div>
+
+<div class="col-lg-3 col-md-6">
+
+<div class="feature-card">
+
+<div class="feature-icon">
+<i class="bi bi-bar-chart-line"></i>
+</div>
+
+<h5 class="feature-title">
+Backtesting
+</h5>
+
+<p class="feature-text">
+Evaluate trading strategies using historical market data.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

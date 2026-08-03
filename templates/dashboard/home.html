@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<style>
+.dashboard-card{background:#1b222d;border:1px solid #313b49;border-radius:14px;transition:.25s}
+.dashboard-card:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(0,0,0,.35)}
+.dashboard-card .card-body{padding:28px}
+.dashboard-value{font-size:2rem;font-weight:700}
+.dashboard-label{margin-top:8px;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:#94a3b8}
+.modern-card{background:#1b222d;border:1px solid #313b49;border-radius:14px;overflow:hidden;margin-bottom:24px}
+.modern-card .card-header{background:#171d27;color:#fff;border-bottom:1px solid #313b49;display:flex;justify-content:space-between}
+.signal-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #313b49}
+.signal-row:last-child{border-bottom:none}
+.table{color:#fff!important}.table thead th{background:#111827!important;color:#94a3b8!important}.table td{background:transparent!important;color:#fff!important}
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+<div><h2 class="fw-bold">Trading Dashboard</h2><p class="text-secondary">Welcome {{ user.username }} • Here's what's happening today</p></div>
+</div>
+
+<div class="row g-4 mb-4">
+<div class="col-lg-3"><div class="dashboard-card"><div class="card-body text-center"><div class="dashboard-value text-success">₹{{ portfolio.total_pnl }}</div><div class="dashboard-label">Realised P&L</div></div></div></div>
+<div class="col-lg-3"><div class="dashboard-card"><div class="card-body text-center"><div class="dashboard-value">{{ positions.count }}</div><div class="dashboard-label">Open Positions</div></div></div></div>
+<div class="col-lg-3"><div class="dashboard-card"><div class="card-body text-center"><div class="dashboard-value">₹{{ portfolio.cash_balance }}</div><div class="dashboard-label">Available Cash</div></div></div></div>
+<div class="col-lg-3"><div class="dashboard-card"><div class="card-body text-center"><div class="dashboard-value">{{ backtest_runs }}</div><div class="dashboard-label">Backtest Runs</div></div></div></div>
+</div>
+
+<div class="row">
+<div class="col-lg-8">
+<div class="modern-card"><div class="card-header"><span>Portfolio Equity</span><span class="text-success">Paper Trading</span></div><div class="card-body"><canvas id="equityChart"></canvas></div></div>
+</div>
+<div class="col-lg-4">
+<div class="modern-card"><div class="card-header">Signal Summary</div><div class="card-body">
+<div class="signal-row"><span>Strong Buy</span><span class="badge bg-success">{{ strong_buy }}</span></div>
+<div class="signal-row"><span>Buy</span><span class="badge bg-primary">{{ buy }}</span></div>
+<div class="signal-row"><span>Hold</span><span class="badge bg-warning text-dark">{{ hold }}</span></div>
+<div class="signal-row"><span>Avoid</span><span class="badge bg-danger">{{ avoid }}</span></div>
+</div></div>
+</div>
+</div>
+
+<div class="modern-card"><div class="card-header">Open Positions</div><div class="table-responsive"><table class="table align-middle">
+<thead><tr><th>Stock</th><th>Qty</th><th>Entry</th><th>Current</th><th>P&L</th></tr></thead>
+<tbody>{% for p in positions %}<tr><td>{{ p.stock.symbol }}</td><td>{{ p.quantity }}</td><td>₹{{ p.average_price }}</td><td>₹{{ p.current_price }}</td><td>{% if p.unrealized_pnl >= 0 %}<span class="text-success">+₹{{ p.unrealized_pnl }}</span>{% else %}<span class="text-danger">₹{{ p.unrealized_pnl }}</span>{% endif %}</td></tr>{% empty %}<tr><td colspan="5" class="text-center">No Open Positions</td></tr>{% endfor %}</tbody>
+</table></div></div>
+
+<div class="modern-card"><div class="card-header">Latest Signals</div><div class="table-responsive"><table class="table align-middle">
+<thead><tr><th>Stock</th><th>Signal</th><th>Score</th></tr></thead>
+<tbody>{% for s in latest_signals %}<tr><td>{{ s.stock.symbol }}</td><td><span class="badge bg-primary">{{ s.signal }}</span></td><td>{{ s.score }}</td></tr>{% endfor %}</tbody>
+</table></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+new Chart(document.getElementById('equityChart'),{type:'line',data:{labels:['Mon','Tue','Wed','Thu','Fri'],datasets:[{data:[1000000,1008000,1003000,1012000,1020000],borderColor:'#22c55e',backgroundColor:'rgba(34,197,94,.15)',fill:true,tension:.4}]},options:{plugins:{legend:{display:false}}}});
+</script>
+{% endblock %}

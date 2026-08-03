@@ -1,0 +1,291 @@
+{% extends "base.html" %}
+
+{% block title %}My Indicators{% endblock %}
+
+{% block content %}
+
+<style>
+
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.page-title{
+    font-size:2rem;
+    font-weight:700;
+    color:#fff;
+}
+
+.page-subtitle{
+    color:#94a3b8;
+    margin-top:5px;
+}
+
+.indicator-card{
+    background:#1b222d;
+    border:1px solid #313b49;
+    border-radius:16px;
+    overflow:hidden;
+}
+
+.card-header-modern{
+    padding:18px 25px;
+    background:#171d27;
+    border-bottom:1px solid #313b49;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.table{
+    margin:0;
+    color:#fff!important;
+}
+
+.table thead th{
+    background:#111827!important;
+    color:#94a3b8!important;
+    border-color:#313b49!important;
+    text-transform:uppercase;
+    font-size:12px;
+    letter-spacing:.08em;
+    padding:16px;
+}
+
+.table td{
+    background:transparent!important;
+    color:#fff!important;
+    border-color:#313b49!important;
+    padding:18px 16px;
+    vertical-align:middle;
+}
+
+.table tbody tr{
+    transition:.2s;
+}
+
+.table tbody tr:hover td{
+    background:#232b36!important;
+}
+
+.badge{
+    padding:8px 12px;
+    font-weight:600;
+}
+
+.btn-add{
+    border-radius:10px;
+    padding:10px 20px;
+    font-weight:600;
+}
+
+.btn-edit{
+    border-radius:8px;
+    padding:6px 14px;
+}
+
+.btn-delete{
+    border-radius:8px;
+    padding:6px 14px;
+}
+
+.indicator-name{
+    font-weight:700;
+    color:#60a5fa;
+}
+
+.empty-state{
+    padding:80px 20px;
+    text-align:center;
+}
+
+.empty-state h4{
+    color:white;
+}
+
+.empty-state p{
+    color:#94a3b8;
+}
+
+</style>
+
+<div class="container-fluid">
+
+<div class="page-header">
+
+<div>
+
+<h2 class="page-title">
+
+My Indicators
+
+</h2>
+
+<div class="page-subtitle">
+
+Manage your technical analysis indicators
+
+</div>
+
+</div>
+
+<a href="{% url 'add_indicator' %}"
+
+class="btn btn-primary btn-add">
+
++ Add Indicator
+
+</a>
+
+</div>
+
+<div class="indicator-card">
+
+<div class="card-header-modern">
+
+<h5 class="mb-0">
+
+Configured Indicators
+
+</h5>
+
+<span class="badge bg-primary">
+
+{{ indicators|length }} Indicators
+
+</span>
+
+</div>
+
+{% if indicators %}
+
+<div class="table-responsive">
+
+<table class="table align-middle">
+
+<thead>
+
+<tr>
+
+<th>Indicator</th>
+
+<th>Period</th>
+
+<th>Status</th>
+
+<th width="170">Actions</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for indicator in indicators %}
+
+<tr>
+
+<td>
+
+<div class="indicator-name">
+
+{{ indicator.indicator }}
+
+</div>
+
+</td>
+
+<td>
+
+{{ indicator.period }}
+
+</td>
+
+<td>
+
+{% if indicator.enabled %}
+
+<span class="badge bg-success">
+
+Enabled
+
+</span>
+
+{% else %}
+
+<span class="badge bg-secondary">
+
+Disabled
+
+</span>
+
+{% endif %}
+
+</td>
+
+<td>
+
+<a href="{% url 'edit_indicator' indicator.id %}"
+
+class="btn btn-warning btn-sm btn-edit">
+
+Edit
+
+</a>
+
+<a href="{% url 'delete_indicator' indicator.id %}"
+
+class="btn btn-danger btn-sm btn-delete">
+
+Delete
+
+</a>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% else %}
+
+<div class="empty-state">
+
+<h4>
+
+No Indicators Added
+
+</h4>
+
+<p>
+
+Start by adding your first technical indicator.
+
+</p>
+
+<a href="{% url 'add_indicator' %}"
+
+class="btn btn-primary mt-3">
+
+Add Indicator
+
+</a>
+
+</div>
+
+{% endif %}
+
+</div>
+
+</div>
+
+{% endblock %}

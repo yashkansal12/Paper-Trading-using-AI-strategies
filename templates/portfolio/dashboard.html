@@ -1,0 +1,138 @@
+
+{% extends "base.html" %}
+{% block content %}
+<style>
+:root{
+--bg:#0b1017;
+--panel:#171c24;
+--panel2:#1d2430;
+--border:#313b49;
+--text:#f8fafc;
+--muted:#94a3b8;
+--blue:#5aa7ff;
+--green:#22c55e;
+--red:#ef4444;
+}
+body{background:var(--bg)!important;color:var(--text)!important;}
+.portfolio-wrapper{padding:28px;}
+.stat-card{
+background:linear-gradient(180deg,var(--panel),var(--panel2));
+border:1px solid var(--border);
+border-radius:14px;
+transition:.25s;
+height:100%;
+}
+.stat-card:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(0,0,0,.35);}
+.metric{font-size:2rem;font-weight:700;color:#fff;}
+.label{font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-top:8px;}
+.holdings-card{
+margin-top:28px;
+background:var(--panel);
+border:1px solid var(--border);
+border-radius:14px;
+overflow:hidden;
+}
+.table-responsive{background:var(--panel);}
+.table{
+margin:0!important;
+color:#fff!important;
+background:transparent!important;
+}
+.table thead th{
+background:#111827!important;
+color:var(--muted)!important;
+border-color:var(--border)!important;
+padding:16px!important;
+font-size:.75rem;
+text-transform:uppercase;
+}
+.table tbody,
+.table tbody tr,
+.table tbody td{
+background:transparent!important;
+color:#fff!important;
+border-color:var(--border)!important;
+}
+.table tbody tr:hover td{
+background:#202938!important;
+}
+.table td *{
+color:inherit!important;
+}
+.symbol{
+color:var(--blue)!important;
+font-weight:700;
+}
+.form-control{
+background:#0f172a!important;
+color:#fff!important;
+border:1px solid var(--border)!important;
+}
+.form-control:focus{
+background:#0f172a!important;
+color:#fff!important;
+border-color:var(--blue)!important;
+box-shadow:none!important;
+}
+.btn-buy{background:var(--green);border:none;color:#fff;}
+.btn-sell{background:var(--red);border:none;color:#fff;}
+.btn-buy:hover{background:#16a34a;color:#fff;}
+.btn-sell:hover{background:#dc2626;color:#fff;}
+</style>
+
+<div class="container-fluid portfolio-wrapper">
+<div class="row g-4">
+<div class="col-md-3"><div class="stat-card p-4 text-center"><div class="metric">₹{{ portfolio.cash_balance }}</div><div class="label">Cash Balance</div></div></div>
+<div class="col-md-3"><div class="stat-card p-4 text-center"><div class="metric">₹{{ portfolio.invested_amount }}</div><div class="label">Invested</div></div></div>
+<div class="col-md-3"><div class="stat-card p-4 text-center"><div class="metric">₹{{ portfolio.portfolio_value }}</div><div class="label">Portfolio Value</div></div></div>
+<div class="col-md-3"><div class="stat-card p-4 text-center"><div class="metric">{% if portfolio.total_pnl >= 0 %}<span class="text-success">₹{{ portfolio.total_pnl }}</span>{% else %}<span class="text-danger">₹{{ portfolio.total_pnl }}</span>{% endif %}</div><div class="label">Total P&amp;L</div></div></div>
+</div>
+
+<div class="holdings-card">
+<div class="d-flex justify-content-between align-items-center p-3 border-bottom" style="border-color:var(--border)!important;">
+<h5 class="mb-0">Holdings</h5>
+<span class="badge bg-primary">{{ positions|length }}</span>
+</div>
+
+<div class="table-responsive">
+<table class="table align-middle">
+<thead>
+<tr><th>Stock</th><th>Qty</th><th>Avg</th><th>LTP</th><th>Value</th><th>P&L</th><th>Buy</th><th>Sell</th></tr>
+</thead>
+<tbody>
+{% for p in positions %}
+<tr>
+<td class="symbol">{{ p.stock.symbol }}</td>
+<td>{{ p.quantity }}</td>
+<td>₹{{ p.average_price }}</td>
+<td>₹{{ p.current_price }}</td>
+<td>₹{{ p.market_value }}</td>
+<td>{% if p.unrealized_pnl >= 0 %}<span class="text-success fw-bold">+₹{{ p.unrealized_pnl }}</span>{% else %}<span class="text-danger fw-bold">₹{{ p.unrealized_pnl }}</span>{% endif %}</td>
+<td>
+<form method="post" action="{% url 'buy_stock' p.stock.id %}">
+{% csrf_token %}
+<div class="input-group input-group-sm">
+<input class="form-control" type="number" name="quantity" value="1" min="1">
+<button class="btn btn-buy">Buy</button>
+</div>
+</form>
+</td>
+<td>
+<form method="post" action="{% url 'sell_stock' p.stock.id %}">
+{% csrf_token %}
+<div class="input-group input-group-sm">
+<input class="form-control" type="number" name="quantity" value="1" min="1" max="{{ p.quantity }}">
+<button class="btn btn-sell">Sell</button>
+</div>
+</form>
+</td>
+</tr>
+{% empty %}
+<tr><td colspan="8" class="text-center py-5">No Holdings Yet</td></tr>
+{% endfor %}
+</tbody>
+</table>
+</div>
+</div>
+</div>
+{% endblock %}

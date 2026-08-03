@@ -1,0 +1,399 @@
+{% extends "base.html" %}
+
+{% block title %}GTT Orders{% endblock %}
+
+{% block content %}
+
+<style>
+
+.page-header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:30px;
+}
+
+.page-title{
+font-size:2rem;
+font-weight:700;
+color:#fff;
+}
+
+.page-subtitle{
+color:#94a3b8;
+margin-top:4px;
+}
+
+.gtt-card{
+
+background:#1b222d;
+
+border:1px solid #313b49;
+
+border-radius:14px;
+
+overflow:hidden;
+
+}
+
+.gtt-header{
+
+padding:18px 24px;
+
+background:#171d27;
+
+border-bottom:1px solid #313b49;
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+}
+
+.table{
+
+margin:0;
+
+color:#fff!important;
+
+}
+
+.table thead th{
+
+background:#111827!important;
+
+color:#94a3b8!important;
+
+border-color:#313b49!important;
+
+padding:16px;
+
+font-size:12px;
+
+text-transform:uppercase;
+
+letter-spacing:.08em;
+
+}
+
+.table td{
+
+padding:18px 16px;
+
+background:transparent!important;
+
+color:#fff!important;
+
+border-color:#313b49!important;
+
+vertical-align:middle;
+
+}
+
+.table tbody tr{
+
+transition:.2s;
+
+}
+
+.table tbody tr:hover td{
+
+background:#232b36!important;
+
+}
+
+.stock-symbol{
+
+font-weight:700;
+
+font-size:15px;
+
+color:#5aa7ff;
+
+}
+
+.btn-action{
+
+border-radius:8px;
+
+padding:6px 14px;
+
+font-size:13px;
+
+font-weight:600;
+
+}
+
+.badge{
+
+padding:8px 12px;
+
+font-weight:600;
+
+}
+
+.empty-state{
+
+padding:70px 20px;
+
+text-align:center;
+
+color:#94a3b8;
+
+}
+
+</style>
+
+<div class="container-fluid">
+
+<div class="page-header">
+
+<div>
+
+<h2 class="page-title">
+
+GTT Orders
+
+</h2>
+
+<div class="page-subtitle">
+
+Manage your Good Till Triggered Orders
+
+</div>
+
+</div>
+
+<span class="badge bg-primary">
+
+{{ orders|length }} Orders
+
+</span>
+
+</div>
+
+<div class="gtt-card">
+
+<div class="gtt-header">
+
+<h5 class="mb-0">
+
+Active Orders
+
+</h5>
+
+</div>
+
+<div class="table-responsive">
+
+<table class="table align-middle">
+
+<thead>
+
+<tr>
+
+<th>Stock</th>
+
+<th>Type</th>
+
+<th>Trigger</th>
+
+<th>Qty</th>
+
+<th>Target</th>
+
+<th>Stop Loss</th>
+
+<th>Status</th>
+
+<th>Expiry</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for order in orders %}
+
+<tr>
+
+<td>
+
+<div class="stock-symbol">
+
+{{ order.stock.symbol }}
+
+</div>
+
+</td>
+
+<td>
+
+{% if order.order_type == "BUY" %}
+
+<span class="badge bg-success">
+
+BUY
+
+</span>
+
+{% else %}
+
+<span class="badge bg-danger">
+
+SELL
+
+</span>
+
+{% endif %}
+
+</td>
+
+<td>
+
+₹{{ order.trigger_price }}
+
+</td>
+
+<td>
+
+{{ order.quantity }}
+
+</td>
+
+<td>
+
+₹{{ order.target_price }}
+
+</td>
+
+<td>
+
+₹{{ order.stop_loss }}
+
+</td>
+
+<td>
+
+{% if order.status == "ACTIVE" %}
+
+<span class="badge bg-primary">
+
+ACTIVE
+
+</span>
+
+{% elif order.status == "TRIGGERED" %}
+
+<span class="badge bg-success">
+
+TRIGGERED
+
+</span>
+
+{% elif order.status == "EXPIRED" %}
+
+<span class="badge bg-warning text-dark">
+
+EXPIRED
+
+</span>
+
+{% else %}
+
+<span class="badge bg-secondary">
+
+CANCELLED
+
+</span>
+
+{% endif %}
+
+</td>
+
+<td>
+
+{{ order.expiry_date }}
+
+</td>
+
+<td>
+
+{% if order.status == "ACTIVE" %}
+
+<a href="{% url 'edit_gtt' order.id %}"
+
+class="btn btn-primary btn-sm btn-action">
+
+Modify
+
+</a>
+
+<a href="{% url 'cancel_gtt' order.id %}"
+
+class="btn btn-danger btn-sm btn-action"
+
+onclick="return confirm('Cancel this GTT Order?');">
+
+Cancel
+
+</a>
+
+{% else %}
+
+<span class="text-secondary">
+
+—
+
+</span>
+
+{% endif %}
+
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+<td colspan="9">
+
+<div class="empty-state">
+
+<h4 class="text-white">
+
+No GTT Orders
+
+</h4>
+
+<p>
+
+You haven't created any Good Till Triggered orders yet.
+
+</p>
+
+</div>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block title %}
+My Watchlist
+{% endblock %}
+
+{% block content %}
+
+<style>
+.watchlist-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.watchlist-title{
+    font-size:2rem;
+    font-weight:700;
+    color:#fff;
+}
+
+.watchlist-subtitle{
+    color:#8b97a8;
+    margin-top:5px;
+}
+
+.stock-card{
+    background:#1b222d;
+    border:1px solid #303744;
+    border-radius:14px;
+    transition:.25s;
+    overflow:hidden;
+    height:100%;
+}
+
+.stock-card:hover{
+    transform:translateY(-5px);
+    border-color:#4f8cff;
+    box-shadow:0 12px 30px rgba(0,0,0,.35);
+}
+
+.stock-card .card-body{
+    padding:24px;
+}
+
+.stock-symbol{
+    font-size:1.4rem;
+    font-weight:700;
+    color:#5aa7ff;
+    margin-bottom:8px;
+}
+
+.stock-name{
+    color:#b8c2d1;
+    min-height:48px;
+}
+
+.open-btn{
+    width:100%;
+    border-radius:10px;
+    font-weight:600;
+    padding:10px;
+    background:#22c55e;
+    border:none;
+}
+
+.open-btn:hover{
+    background:#16a34a;
+}
+
+.empty-card{
+    background:#1b222d;
+    border:1px dashed #374151;
+    border-radius:14px;
+    padding:60px 20px;
+    text-align:center;
+}
+
+.empty-card i{
+    font-size:60px;
+    color:#4f8cff;
+}
+
+.empty-card h4{
+    margin-top:20px;
+    color:white;
+}
+
+.empty-card p{
+    color:#94a3b8;
+}
+</style>
+
+<div class="container-fluid">
+
+<div class="watchlist-header">
+
+<div>
+<h2 class="watchlist-title">
+My Watchlist
+</h2>
+
+<div class="watchlist-subtitle">
+Track your favourite stocks
+</div>
+</div>
+
+<span class="badge bg-primary rounded-pill px-3 py-2">
+{{ stocks|length }} Stocks
+</span>
+
+</div>
+
+<div class="row g-4">
+
+{% for item in stocks %}
+
+<div class="col-xl-3 col-lg-4 col-md-6">
+
+<div class="card stock-card">
+
+<div class="card-body">
+
+<div class="stock-symbol">
+{{ item.stock.symbol }}
+</div>
+
+<div class="stock-name">
+{{ item.stock.company_name }}
+</div>
+
+<hr class="border-secondary">
+
+<a href="{% url 'stock_detail' item.stock.id %}"
+class="btn open-btn">
+
+<i class="bi bi-graph-up-arrow"></i>
+
+Open Chart
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+{% empty %}
+
+<div class="col-12">
+
+<div class="empty-card">
+
+<i class="bi bi-star"></i>
+
+<h4>
+Your Watchlist is Empty
+</h4>
+
+<p>
+Add stocks to your watchlist and monitor them here.
+</p>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,302 @@
+{% extends "base.html" %}
+
+{% block title %}Live Stock Market{% endblock %}
+
+{% block content %}
+
+<style>
+
+.page-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+}
+
+.page-title{
+    font-size:2rem;
+    font-weight:700;
+    color:#fff;
+}
+
+.page-subtitle{
+    color:#94a3b8;
+    margin-top:5px;
+}
+
+.market-card{
+    background:#1b222d;
+    border:1px solid #313b49;
+    border-radius:16px;
+    overflow:hidden;
+}
+
+.market-header{
+    background:#171d27;
+    border-bottom:1px solid #313b49;
+    padding:18px 24px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.table{
+    margin:0;
+    color:#fff!important;
+}
+
+.table thead th{
+    background:#111827!important;
+    color:#94a3b8!important;
+    border-color:#313b49!important;
+    text-transform:uppercase;
+    font-size:12px;
+    letter-spacing:.08em;
+    padding:16px;
+}
+
+.table td{
+    background:transparent!important;
+    color:#fff!important;
+    border-color:#313b49!important;
+    padding:18px 16px;
+    vertical-align:middle;
+}
+
+.table tbody tr{
+    transition:.2s;
+}
+
+.table tbody tr:hover td{
+    background:#232b36!important;
+}
+
+.stock-link{
+    font-weight:700;
+    color:#60a5fa;
+    text-decoration:none;
+}
+
+.stock-link:hover{
+    color:#93c5fd;
+}
+
+.price{
+    font-weight:700;
+}
+
+.positive{
+    color:#22c55e;
+    font-weight:700;
+}
+
+.negative{
+    color:#ef4444;
+    font-weight:700;
+}
+
+.empty-state{
+    text-align:center;
+    padding:70px 20px;
+}
+
+.empty-state h4{
+    color:#fff;
+}
+
+.empty-state p{
+    color:#94a3b8;
+}
+
+</style>
+
+<div class="container-fluid">
+
+<div class="page-header">
+
+<div>
+
+<h2 class="page-title">
+
+Live Stock Market
+
+</h2>
+
+<div class="page-subtitle">
+
+Real-time market prices and performance
+
+</div>
+
+</div>
+
+<span class="badge bg-success">
+
+Live Market
+
+</span>
+
+</div>
+
+<div class="market-card">
+
+<div class="market-header">
+
+<h5 class="mb-0">
+
+Market Watch
+
+</h5>
+
+<span class="badge bg-primary">
+
+{{ stock_data|length }} Stocks
+
+</span>
+
+</div>
+
+<div class="table-responsive">
+
+<table class="table align-middle">
+
+<thead>
+
+<tr>
+
+<th>Symbol</th>
+
+<th>Company</th>
+
+<th>Price</th>
+
+<th>Change</th>
+
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for item in stock_data %}
+
+<tr>
+
+<td>
+
+<a href="{% url 'stock_detail' item.stock.id %}"
+
+class="stock-link">
+
+{{ item.stock.symbol }}
+
+</a>
+
+</td>
+
+<td>
+
+{{ item.stock.company_name }}
+
+</td>
+
+{% if item.live %}
+
+<td class="price">
+
+₹{{ item.live.price }}
+
+</td>
+
+<td>
+
+{% if item.live.change > 0 %}
+
+<span class="positive">
+
+▲ +{{ item.live.change_percent }}%
+
+</span>
+
+{% else %}
+
+<span class="negative">
+
+▼ {{ item.live.change_percent }}%
+
+</span>
+
+
+
+
+{% endif %}
+
+</td>
+
+<td>
+
+<span class="badge bg-success">
+
+LIVE
+
+</span>
+
+</td>
+
+{% else %}
+
+<td colspan="3">
+
+<span class="text-danger">
+
+Unable to Fetch
+
+</span>
+
+</td>
+
+{% endif %}
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+<td colspan="5">
+
+<div class="empty-state">
+
+<h4>
+
+No Market Data
+
+</h4>
+
+<p>
+
+No stocks are available to display.
+
+</p>
+
+</div>
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}
