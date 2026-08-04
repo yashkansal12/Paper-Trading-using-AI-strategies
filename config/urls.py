@@ -21,10 +21,12 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from dashboard.views import home
+from django.http import HttpResponse
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", home, name="home"),          # Homepage
+    # path("", home, name="home"),          # Homepage
+    path("", lambda request: HttpResponse("Render Working"), name="home"),
     path("accounts/", include("accounts.urls")),
     path("", include("accounts.urls")),
     path("", include("dashboard.urls")),
