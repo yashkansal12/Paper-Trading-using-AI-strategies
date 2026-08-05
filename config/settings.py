@@ -27,17 +27,37 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECRET_KEY = 'django-insecure-n+f3$wrs=8#lhwul!(l&)8_j)+^=b)@-+=g9ycxl)sp)2^j6x6'
 
 
-SECRET_KEY = os.getenv("SECRET_KEY")
+# SECRET_KEY = os.getenv("SECRET_KEY")
+
+
+SECRET_KEY = os.getenv(
+    "SECRET_KEY",
+    "django-insecure-local-development-key"
+)
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = os.getenv("DEBUG", "False") == "True"
-DEBUG = True
+
+DEBUG = os.getenv("DEBUG", "False") == "True"
+
+# DEBUG = True
+
+# ALLOWED_HOSTS = [
+#     ".onrender.com",
+#     "127.0.0.1",
+#     "localhost",
+# ]
+
+
 
 ALLOWED_HOSTS = [
     ".onrender.com",
+    ".railway.app",
+    ".up.railway.app",
     "127.0.0.1",
     "localhost",
 ]
+
 
 
 # Application definition
@@ -112,9 +132,20 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 
+# DATABASES = {
+#     "default": dj_database_url.config(
+#         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
+#     )
+# }
+
+
+
+
+
 DATABASES = {
     "default": dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
     )
 }
 
@@ -160,6 +191,9 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
+# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
@@ -173,6 +207,22 @@ LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "dashboard"
 LOGOUT_REDIRECT_URL = "login"
 
+
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "ERROR",
+    },
+}
 
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
