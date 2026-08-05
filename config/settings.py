@@ -23,7 +23,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-
 # SECRET_KEY = 'django-insecure-n+f3$wrs=8#lhwul!(l&)8_j)+^=b)@-+=g9ycxl)sp)2^j6x6'
 
 
@@ -33,14 +32,10 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 
 
-DEBUG = True
+DEBUG = os.getenv("DEBUG", "False").lower() in ("1", "true", "yes")
 
-ALLOWED_HOSTS = [
-    ".onrender.com",
-    "127.0.0.1",
-    "localhost",
-]
-
+# Allow hosts from environment variable (comma separated) or sensible defaults
+ALLOWED_HOSTS = [host.strip() for host in os.getenv("ALLOWED_HOSTS", ".onrender.com,127.0.0.1,localhost").split(",") if host.strip()]
 
 
 
@@ -116,13 +111,11 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # }
 
 
-
 DATABASES = {
     "default": dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}"
     )
 }
-
 
 
 # Password validation
